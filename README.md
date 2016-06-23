@@ -1,1 +1,1 @@
-# minggejs
+# minggejs1.9.6.5 一个和JQ函数一样，手机 PC通用的类库，执行效率在JQ之上
