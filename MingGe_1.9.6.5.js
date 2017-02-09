@@ -1,5 +1,5 @@
 /* 
- *  MingGeJs类库1.9.6.5.2016超强正式版
+ *  MingGeJs类库1.9.6.5.2016 v2超强正式版(2017/2/1)
  *  
  *  你会用JQUERY，那你也会用这个类库，因为语法都是一样的,那有开发文档吗？和JQUERY一样，要开发文档干嘛？
  *
@@ -1168,14 +1168,22 @@
 				},
 				delAjaxEve: function(obj) {
 					D.delVar(obj, onStatech);
+					this.xmlhttp=false;
 				},
-				out: function(arg, xmlhttp) {
+				abort :function(){
+				 	this.timeout && (clearTimeout(this.timeout), this.timeout = false);
+				 	this.xmlhttp && this.out(0, this.xmlhttp,302);
+				},
+				out: function(arg, xmlhttp,code) {
 					this.delAjaxEve(xmlhttp);
 					this.delProgress(xmlhttp);
 					this.transit = true;
-					this.erromsg = 504;
+					this.erromsg = code || 504;
 					this.stop = true;
-					D.isFunction(arg.error) && arg.error(504);
+					try{
+					  xmlhttp.abort();
+					}catch(e){}
+				    D.isFunction(arg.error) && arg.error(504);
 				},
 				ajax: function(arg) {
 					if (!D.isString(arg.url)) {
@@ -1198,6 +1206,7 @@
 					D.isString(arg.type) && (arg.type = arg.type.toUpperCase());
 					var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP"),
 						isUrlencoded = true;
+						this.xmlhttp = xmlhttp;
 					arg.data = D.objToUrl(arg.data) || arg.data;
 					if (D.isTxt(arg.data)) {
 						arg.data = trim(arg.data);
